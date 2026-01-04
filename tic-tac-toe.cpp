@@ -16,9 +16,12 @@ int main() {
 		if (skipMenu) {
 			char choiceLetter = ' ';
 			while (choiceLetter != 'X' && choiceLetter != 'O') {
-				std::cout << "Новая игра! Выберите ваш символ (X или O): ";
+				std::cout << "Новая игра! Игрок 1, выберите ваш символ (X или O): ";
 				std::cin >> choiceLetter;
-				choiceLetter = toupper(choiceLetter);
+				if (std::cin.peek() == '\n' || std::cin.peek() == EOF) {
+					choiceLetter = toupper(choiceLetter);
+				}
+				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			}
 			currentTurn = choiceLetter;
 			skipMenu = false;
@@ -33,49 +36,51 @@ int main() {
 			std::cout << "Введите номер клетки (1-9), '0' - сохранить, '-1' - вернуться в меню: ";
 			int move;
 			std::cin >> move;
-
-			if (std::cin.fail()) {
+			
+			if (std::cin.fail() || std::cin.peek() != '\n' && std::cin.peek() != EOF) {
 				std::cin.clear();
 				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-				std::cout << "\nОшибка! Введите число.\nНажмите Enter...";
+				std::cout << "\nОшибка! Введите целое число.\nНажмите Enter...";
 				std::cin.get();
 				continue;
-			}
-			
-			if (move == 0) {
-				saveGame(theBoard, currentTurn);
-				continue;
-			}
-			if (move == -1) {
-				backToMenu = true;
-				gameIsPlaying = false;
-				system("cls || clear");
-				continue;
-			}
-
-			if (move >= 1 && move <= 9 && theBoard[move] == ' ') {
-				theBoard[move] = currentTurn;
-
-				if (isWinner(theBoard, currentTurn)) {
-					drawBoard(theBoard);
-					std::cout << "ПОБЕДА! Игрок '" << currentTurn << "' выиграл!" << std::endl;
-					gameIsPlaying = false;
-				}
-				else if (isBoardFull(theBoard)) {
-					drawBoard(theBoard);
-					std::cout << "НИЧЬЯ!" << std::endl;
-					gameIsPlaying = false;
-				}
-				else {
-					currentTurn = (currentTurn == 'X') ? 'O' : 'X';
-				}
 			}
 			else {
-				std::cout << "\nОшибка! Клетка занята или введено неверное число." << std::endl;
-				std::cout << "Нажмите Enter, чтобы продолжить...";
-				std::cin.ignore();
-				std::cin.get();
+				if (move == 0) {
+					saveGame(theBoard, currentTurn);
+					continue;
+				}
+				if (move == -1) {
+					backToMenu = true;
+					gameIsPlaying = false;
+					system("cls || clear");
+					continue;
+				}
+
+				if (move >= 1 && move <= 9 && theBoard[move] == ' ') {
+					theBoard[move] = currentTurn;
+
+					if (isWinner(theBoard, currentTurn)) {
+						drawBoard(theBoard);
+						std::cout << "ПОБЕДА! Игрок '" << currentTurn << "' выиграл!" << std::endl;
+						gameIsPlaying = false;
+					}
+					else if (isBoardFull(theBoard)) {
+						drawBoard(theBoard);
+						std::cout << "НИЧЬЯ!" << std::endl;
+						gameIsPlaying = false;
+					}
+					else {
+						currentTurn = (currentTurn == 'X') ? 'O' : 'X';
+					}
+				}
+				else {
+					std::cout << "\nОшибка! Клетка занята или введено неверное число." << std::endl;
+					std::cout << "Нажмите Enter, чтобы продолжить...";
+					std::cin.ignore();
+					std::cin.get();
+				}
 			}
+			
 		}
 		if (!backToMenu && run) {
 			playAgain(run, skipMenu);

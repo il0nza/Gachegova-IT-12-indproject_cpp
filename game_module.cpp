@@ -70,8 +70,8 @@ bool loadGame(std::vector<char>& board, char& turn) {
 
 void rules() {
 	system("clear || cls");
-	std::cout << "Инструкция по игре «Крестики-Нолики»\n" << std::endl;
-	std::cout << "В начале вам будет предложено четыре варианта:\n1.Новая игра — начать матч с пустого поля\n2.Загрузить игру — восстановить последнюю сохраненную партию из файла savegame.txt\n3.Ознакомиться с правилами игры\n4. Выход\n" << std::endl;
+	std::cout << "Инструкция по игре «Крестики-Нолики» для двух игроков\n" << std::endl;
+	std::cout << "В начале вам будет предложено четыре варианта:\n1.Новая игра — начать матч с пустого поля\n2.Загрузить игру — восстановить последнюю сохраненную партию из файла savegame.txt\n3.Ознакомиться с правилами игры\n4.Выход\n" << std::endl;
 	std::cout << "Если вы выбрали «Новую игру», Игрок 1 должен выбрать свой символ : X(крестик) или O(нолик).\nВторой игрок автоматически получает оставшийся символ.\nПоле представлено в виде сетки 3x3, где каждая клетка соответствует цифре от 1 до 9:\n";
 	std::cout << " 7 | 8 | 9 \n";
 	std::cout << "-----------\n";
@@ -119,7 +119,10 @@ void menu(std::vector<char>& theBoard, char& currentTurn, bool& gameIsPlaying, b
 			while (choiceLetter != 'X' && choiceLetter != 'O') {
 				std::cout << "\nИгрок 1, выберите символ (X или O): ";
 				std::cin >> choiceLetter;
-				choiceLetter = toupper(choiceLetter);
+				if (std::cin.peek() == '\n' || std::cin.peek() == EOF) {
+					choiceLetter = toupper(choiceLetter);
+				}
+				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			}
 			currentTurn = choiceLetter;
 		}
