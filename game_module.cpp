@@ -118,11 +118,14 @@ void menu(std::vector<char>& theBoard, char& currentTurn, bool& gameIsPlaying, b
 			char choiceLetter = ' ';
 			while (choiceLetter != 'X' && choiceLetter != 'O') {
 				std::cout << "\nИгрок 1, выберите символ (X или O): ";
-				std::cin >> choiceLetter;
-				if (std::cin.peek() == '\n' || std::cin.peek() == EOF) {
-					choiceLetter = toupper(choiceLetter);
+				std::string input;
+				std::cin >> input;
+				if (input.length() == 1) {
+					choiceLetter = toupper(input[0]);
 				}
-				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				else {
+					std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				}
 			}
 			currentTurn = choiceLetter;
 		}

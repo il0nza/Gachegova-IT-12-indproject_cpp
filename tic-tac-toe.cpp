@@ -17,11 +17,14 @@ int main() {
 			char choiceLetter = ' ';
 			while (choiceLetter != 'X' && choiceLetter != 'O') {
 				std::cout << "Новая игра! Игрок 1, выберите ваш символ (X или O): ";
-				std::cin >> choiceLetter;
-				if (std::cin.peek() == '\n' || std::cin.peek() == EOF) {
-					choiceLetter = toupper(choiceLetter);
+				std::string input;
+				std::cin >> input;
+				if (input.length() == 1) {
+					choiceLetter = toupper(input[0]);
 				}
-				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				else {
+					std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				}
 			}
 			currentTurn = choiceLetter;
 			skipMenu = false;
@@ -36,7 +39,7 @@ int main() {
 			std::cout << "Введите номер клетки (1-9), '0' - сохранить, '-1' - вернуться в меню: ";
 			int move;
 			std::cin >> move;
-			
+
 			if (std::cin.fail() || std::cin.peek() != '\n' && std::cin.peek() != EOF) {
 				std::cin.clear();
 				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -55,7 +58,6 @@ int main() {
 					system("cls || clear");
 					continue;
 				}
-
 				if (move >= 1 && move <= 9 && theBoard[move] == ' ') {
 					theBoard[move] = currentTurn;
 
@@ -80,7 +82,6 @@ int main() {
 					std::cin.get();
 				}
 			}
-			
 		}
 		if (!backToMenu && run) {
 			playAgain(run, skipMenu);
